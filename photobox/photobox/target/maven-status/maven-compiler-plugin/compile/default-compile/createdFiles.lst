@@ -1,0 +1,9 @@
+com\photobox\repository\PhotoRepository.class
+com\photobox\model\Photo.class
+com\photobox\repository\SessionRepository.class
+com\photobox\service\CameraService.class
+com\photobox\controller\PhotoController.class
+com\photobox\PhotoboxApplication.class
+com\photobox\config\WebSocketConfig.class
+com\photobox\model\Session.class
+com\photobox\service\PrinterService.class

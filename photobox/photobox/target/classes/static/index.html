@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Photobox | Groovy Landing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffd166 100%);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Groovy blobs / abstract shapes */
+        .blob-1 {
+            position: absolute;
+            top: -50px;
+            left: -80px;
+            width: 350px;
+            height: 350px;
+            background: #ffd166;
+            border-radius: 60% 40% 70% 30% / 40% 50% 50% 60%;
+            filter: blur(80px);
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        .blob-2 {
+            position: absolute;
+            bottom: -80px;
+            right: -60px;
+            width: 400px;
+            height: 400px;
+            background: #ef476f;
+            border-radius: 70% 30% 60% 40% / 50% 40% 60% 50%;
+            filter: blur(90px);
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        .blob-3 {
+            position: absolute;
+            top: 40%;
+            left: 20%;
+            width: 250px;
+            height: 250px;
+            background: #06d6a0;
+            border-radius: 50% 50% 30% 70% / 60% 40% 60% 40%;
+            filter: blur(70px);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        /* Stiker bergerak */
+        .sticker {
+            position: absolute;
+            z-index: 2;
+            font-size: 45px;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.2));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
+        }
+
+        .sticker-1 { top: 12%; left: 5%; animation-delay: 0s; }
+        .sticker-2 { top: 20%; right: 8%; animation-delay: 0.6s; }
+        .sticker-3 { bottom: 15%; left: 8%; animation-delay: 1.2s; }
+        .sticker-4 { bottom: 22%; right: 10%; animation-delay: 0.3s; }
+        .sticker-5 { top: 45%; left: 2%; animation-delay: 0.9s; }
+        .sticker-6 { top: 60%; right: 5%; animation-delay: 1.5s; }
+        .sticker-7 { bottom: 5%; left: 20%; animation-delay: 0.4s; }
+
+        /* Container utama - full height, no overflow */
+        .container {
+            position: relative;
+            z-index: 3;
+            max-width: 1300px;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            overflow: hidden;
+        }
+
+        /* Bagian kiri (teks) */
+        .hero-left {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ef476f;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 4px 4px 0 #ef476f, 8px 8px 0 rgba(0,0,0,0.2);
+            letter-spacing: -2px;
+        }
+
+        h1 span {
+            display: block;
+            font-size: 48px;
+            color: #ffd166;
+            text-shadow: 2px 2px 0 #f7931e;
+        }
+
+        .desc {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-weight: 500;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Tombol-tombol */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #06d6a0;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #fff;
+            box-shadow: 0 8px 0 #048a61;
+            font-family: inherit;
+        }
+
+        .btn-primary:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #048a61;
+        }
+
+        /* Bagian kanan (gambar produk) */
+        .hero-right {
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+            position: relative;
+        }
+
+        .frame-preview {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(12px);
+            border-radius: 50px;
+            padding: 30px;
+            border: 2px solid rgba(255,255,255,0.4);
+            transform: rotate(3deg);
+            transition: transform 0.3s;
+        }
+
+        .frame-preview:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+
+        .frame-preview img {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 30px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+        }
+
+        .price-tag {
+            margin-top: 20px;
+            background: #ef476f;
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 6px 0 #a0224a;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 50px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 0 #ef476f;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffd166;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+                justify-content: center;
+            }
+            h1 { font-size: 48px; }
+            h1 span { font-size: 32px; }
+            .btn-group { justify-content: center; }
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px 20px;
+            }
+            .sticker { font-size: 30px; }
+            .logo { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Blobs abstrak -->
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+    <div class="blob-3"></div>
+
+    <!-- Stiker bergerak -->
+    <div class="sticker sticker-1">📸</div>
+    <div class="sticker sticker-2">🎨</div>
+    <div class="sticker sticker-3">🖼️</div>
+    <div class="sticker sticker-4">✨</div>
+    <div class="sticker sticker-5">⭐</div>
+    <div class="sticker sticker-6">💿</div>
+    <div class="sticker sticker-7">🌈</div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">PHOTORAME</div>
+        <div class="nav-links">
+            <a href="#" onclick="window.location.href='/admin.html'">ADMIN</a>
+        </div>
+    </div>
+
+    <!-- Hero section -->
+    <div class="container">
+        <div class="hero-left">
+            <div class="badge">NEW COLLECTION</div>
+            <h1>
+                PHOTO<br>
+                <span>STRIP</span>
+            </h1>
+            <p class="desc">
+                Cetak kenangan terbaikmu jadi foto strip digital <br>
+                dengan frame keren & filter aesthetic. Cepat, praktis, & instan!
+            </p>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="window.location.href='/select-frame.html'">AYO FOTO!</button>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="frame-preview">
+                <img src="images/RADMANSION.jpg" alt="Photo Strip Preview">
+                <div class="price-tag">
+                     Mulai Rp 35.000
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log("Groovy landing page loaded - overflow hidden, no scroll!");
+    </script>
+</body>
+</html>
